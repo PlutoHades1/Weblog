@@ -27,6 +27,12 @@ public interface FeedbackMapper {
     int updateByPrimaryKeySelective(Feedback record);
 
     int updateByPrimaryKey(Feedback record);
+    /**
+     * 根据ID查询 Feedback
+     * @param id
+     * @return
+     */
+    Feedback selectByPrimaryKey(Integer id);
 
     /**
      * 设置isRead状态
@@ -34,15 +40,8 @@ public interface FeedbackMapper {
      * @param state
      */
     @Update("update blog_feedback set is_read=#{state} where id=#{id}")
-    void setRead(@Param("id") Integer id,@Param("state") Integer state);
+    void setRead(@Param("id") Integer id,@Param("state") byte state);
 
-    /**
-     * 根据ID查询 Feedback
-     * @param id
-     * @return
-     */
-    @Select("select *from blog_feedback where id=#{id}")
-    Feedback selectByPrimaryKey(@Param("id") Integer id);
 
 
     /**
@@ -50,7 +49,7 @@ public interface FeedbackMapper {
      * @return
      */
     @Select("select *from blog_feedback where is_read=#{state}")
-    List<Feedback> selectRead(@Param("state") Integer state);
+    List<Feedback> selectRead(@Param("state") byte state);
 
     /**
      * 查询全部 Feedback

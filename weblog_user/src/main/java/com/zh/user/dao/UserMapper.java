@@ -34,7 +34,7 @@ public interface UserMapper {
      * @param state
      */
     @Update("update blog_vuser set state=#{state} where id=#{id}")
-    void setState(@Param("id") Integer id,@Param("state") Byte state);
+    void setState(@Param("id") Integer id,@Param("state") byte state);
 
     /**
      * 更改密码
@@ -57,5 +57,5 @@ public interface UserMapper {
      * @param call
      * @return
      */
-    User selectByCall(@Param("call")String call,@Param("type") int type);
+    User selectByCall(@Param("call")String call,@Param("type") byte type);
 }

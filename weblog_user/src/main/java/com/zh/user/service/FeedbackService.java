@@ -2,12 +2,6 @@ package com.zh.user.service;
 
 import com.zh.common.entity.PageBean;
 import com.zh.user.entity.Feedback;
-import com.zh.user.entity.User;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
-
-import java.util.List;
 
 /**
  * Feedback信息的管理

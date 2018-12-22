@@ -177,7 +177,7 @@ public class UserController {
     }
 
     /**
-     * 用户更改信息
+     * 用户更改账号
      */
     @PutMapping("/update/{id}")
     @ResponseBody
@@ -206,7 +206,7 @@ public class UserController {
     }
 
     /**
-     * 检查 手机号/邮箱 是否已被占用
+     * 检查手机号/邮箱 是否已被占用
      */
     @GetMapping("/checkcall")
     @ResponseBody
@@ -242,4 +242,5 @@ public class UserController {
         //发送
         mailSender.send(msg);
     }
+
 }

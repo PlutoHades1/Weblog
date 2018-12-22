@@ -176,7 +176,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="selectByCall">
+  <select id="selectByCall" resultMap="BaseResultMap">
     select *from blog_vuser
     <where>
       <choose>
@@ -189,4 +189,6 @@
       </choose>
     </where>
   </select>
+
+
 </mapper>

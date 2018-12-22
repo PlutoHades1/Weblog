@@ -44,23 +44,31 @@
     }
     //验证用户名
     function cusername(e){
+        var span = $(e).next();
         var state = true;
         if(!e.checkValidity()){
-            var span = $(e).next();
             span.text("用户名必须4-20个字符(如a-z_A-Z)");
             span.css("color","red");
-            return false;
+            state = false;
         }else{
             var val = $(e).val();
-            $.get("user/checkname",{username:val},function(data){
-                if(data.code!=2000){
-                    $("#username").next().text(data.msg);
-                    state = false;
-                }
+            $.ajax({
+                async: false,
+                url: "user/checkname",
+                type: "get",
+                data: {username:val},
+                success: function(data){
+                    if(data.code!=2000){
+                        span.text(data.msg);
+                        span.css("color","red");
+                        state = false;
+                    }
+                },
+                dataType: "json"
             });
+
         }
         return state;
-
     }
     //验证密码
     function cpassword(e){
@@ -83,7 +91,7 @@
         return true;
     }
 
-    //验正码
+    //校验 验证码
     function ccode(e){
         if(!e.checkValidity()){
             var span = $(e).next();
@@ -96,21 +104,30 @@
 
     //验证手机/邮箱
     function ccall(e){
+        var span = $(e).next();
         var state = true;
         if(!e.checkValidity()){
             //验证格式
-            var span = $(e).next();
             span.text("手机号或邮箱格式不正确");
             span.css("color","red");
             state = false;
         }else{
             //验证是否已存在
             var val = $(e).val();
-            $.get("user/checkcall",{call:val},function(data){
-                if(data.code!=2000){
-                    $(e).next().text(data.msg);
-                    state = false;
-                }
+
+            $.ajax({
+                async: false,
+                url: "user/checkcall",
+                type: "get",
+                data: {call:val},
+                success: function(data){
+                    if(data.code!=2000){
+                        span.text(data.msg);
+                        span.css("color","red");
+                        state = false;
+                    }
+                },
+                dataType: "json"
             });
         }
         return state;
@@ -123,6 +140,8 @@
         if(!cpassword($("#password")[0]))
             return false;
         if(!crepassword())
+            return false;
+        if(!ccall($("#call")[0]))
             return false;
         if(!ccode($("#code")[0]))
             return false;

@@ -1,7 +1,19 @@
 端口:
-    eureka: 8081
-    user: 8082
-    article: 8083
+eureka: 8081
+activity: 8082
+article: 8083
+manager: 8084
+sms: 8085
+sys: 8086
+user: 8087
+web: 8088
 
-用户登录:/user/login post
-用户注册:/user/register post
+//user api
+用户注册: /user/register        -post
+用户登录: /user/login           -post
+用户登出: /user/logout/{id}     -get
+激活账号: /user/active/{id}     -get
+注销账号: /user/freeze/{id}     -post
+更改账号: /user/update/{id}     -put
+检查username: /user/checkname   -get
+检查手机号/邮箱: /user/checkcall  -get

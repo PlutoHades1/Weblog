@@ -72,9 +72,10 @@
         <!--Mybatis分页插件-->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-start</artifactId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>1.2.5</version>
         </dependency>
+
 
         <!-- Druid数据池 -->
         <dependency>
