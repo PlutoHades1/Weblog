@@ -1,13 +1,12 @@
 package com.zh.user.service.impl;
 
-import com.zh.common.entity.RResult;
 import com.zh.user.service.RPCService;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * 熔断器的使用
  */
-@Component
+@Service
 public class RPCServiceImpl implements RPCService {
 //    @Override
 //    public RResult ff(String xx) {

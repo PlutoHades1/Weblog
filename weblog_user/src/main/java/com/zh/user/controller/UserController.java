@@ -7,10 +7,10 @@ import java.util.concurrent.TimeUnit;
 
 import com.zh.common.entity.RResult;
 import com.zh.common.entity.StatusCode;
-import com.zh.common.util.JwtUtil;
 import com.zh.user.entity.Feedback;
 import com.zh.user.entity.User;
 import com.zh.user.exception.NotDataException;
+import com.zh.user.service.FeedbackService;
 import com.zh.user.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -20,7 +20,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +43,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private FeedbackService feedbackService;
+
     @Resource(name="stringRedisTemplate")
     StringRedisTemplate strRedisTemp;    //针对字符串
 
@@ -61,7 +63,7 @@ public class UserController {
         redisTemp.opsForValue().set("user_"+user.getId(),user,30,TimeUnit.MINUTES);
 
         Map<String,String> map = new HashMap<>(1);
-        map.put("toUrl","index.html");
+        map.put("toUrl","/index.html");
         return RResult.success(map);
     }
 
@@ -75,7 +77,7 @@ public class UserController {
 
         //跳转登录页面
         Map<String,String> map = new HashMap<>(1);
-        map.put("toUrl","login.html");
+        map.put("toUrl","/login.html");
         return RResult.success(map);
     }
 
@@ -112,17 +114,20 @@ public class UserController {
      *      需要填写注销原因,并申请注销,
      */
     @PostMapping("/freeze/{id}")
-    public RResult freeze(@PathVariable("id") Integer id, Feedback feedback){
-        //原因即及建议入库
+    public RResult freeze(@PathVariable("id") Integer id,@Valid Feedback feedback, Errors errors){
+        if (errors.hasErrors())
+            throw new NotDataException("提交失败,再试一次吧");
+
+        //意见反馈 入库
         feedback.setUserId(id);
-        feedbackService.
+        feedbackService.insert(feedback);
 
         //注销
         userService.freeze(id);
 
         //跳转到首页
         Map<String,String> map = new HashMap<>(1);
-        map.put("toUrl","index.html");
+        map.put("toUrl","/index.html");
         return RResult.success(map);
     }
 
@@ -130,7 +135,9 @@ public class UserController {
      * 用户注册
      */
     @PostMapping("/register")
-    public String register(String code,String call,HttpServletRequest req, @Valid User user, Errors errors){
+    public RResult register(String code,String call,HttpServletRequest req, @Valid User user, Errors errors){
+        //TODO 校验登录验证码(后期使用滑块验证,或微信扫码)
+
         //校验数据
         if (StringUtils.isEmpty(code) || errors.hasErrors())
             throw new NotDataException("注册失败,再试一次吧");
@@ -163,8 +170,10 @@ public class UserController {
         if(!isSend)
             userService.active(id);
 
-        //跳转注册成功页面
-        return "redirect:/login.html";
+        //跳转到首页
+        Map<String,String> map = new HashMap<>(1);
+        map.put("toUrl","/index.html");
+        return RResult.success(map);
     }
 
     /**
@@ -208,7 +217,6 @@ public class UserController {
 
         return RResult.success();
     }
-
 
 
     @Autowired

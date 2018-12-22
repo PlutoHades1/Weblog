@@ -5,8 +5,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Feedback implements Serializable {
-    public static final int NO_READ=0;
-    public static final int READED=1;
+    public static final byte NO_READ=0;
+    public static final byte READED=1;
 
     private Integer id;
 

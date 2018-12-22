@@ -6,11 +6,12 @@ import com.zh.user.entity.Feedback;
 import com.zh.user.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
+@Service
 public class FeedbackServiceImpl implements FeedbackService {
 
     @Autowired
@@ -23,6 +24,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public void insert(Feedback feedback) {
+        feedback.setIsRead(Feedback.NO_READ);
+        feedback.setCreateTime(new Date());
         feedbackMapper.insert(feedback);
     }
 

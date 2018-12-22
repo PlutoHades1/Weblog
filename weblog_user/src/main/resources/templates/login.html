@@ -45,7 +45,17 @@
         //提交表单
         function infoSubmit(){
             if(checkForm()){
-                $("form").submit();
+                $.ajax({
+                    url: "user/login",
+                    type: "post",
+                    data: $("form").serialize(),
+                    success: function(data){
+                        if (data.code==2000)
+                            location.href=data.data.toUrl;
+                        else
+                            location.reload();
+                    }
+                });
             }
         }
     </script>
