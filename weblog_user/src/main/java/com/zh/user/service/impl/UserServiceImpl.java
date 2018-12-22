@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
             throw new NotDataException("账号或密码错误");
 
         if (user.getState()== User.STATE_NOACTIVE)
-            throw new NotDataException("账号未激活");
+            throw new NotDataException("账号未激活,去邮箱激活吧!");
 
         return user;
     }
@@ -46,14 +46,11 @@ public class UserServiceImpl implements UserService {
 //        user.setProfile();
 //        user.setHead();
 
-        //手机号或邮箱
-        String username = user.getUsername();
-        if(username.contains("@"))
-            user.setPassword(username);
-        else
-            user.setPhone(username);
+        //密码编码
+        String code = encoder.encode(user.getPassword());
+        user.setPassword(code);
         //默认头像
-        user.setUrl(User.DEFAULT_HEAD);
+        user.setHead(User.DEFAULT_HEAD);
         //默认状态
         user.setState(User.STATE_NOACTIVE);
         user.setCreateTime(new Date());
@@ -97,6 +94,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) {
         User user = userMapper.selectByUsername(username);
+        return user;
+    }
+
+    @Override
+    public User findByCall(String call) {
+        //当call是phone,type=0,当call是email,type=1
+        int type = 0;
+        if (call.contains("@"))
+            type=1;
+        User user = userMapper.selectByCall(call,type);
         return user;
     }
 }

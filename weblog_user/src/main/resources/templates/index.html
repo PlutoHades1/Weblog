@@ -3,16 +3,26 @@
 <head>
     <meta charset="UTF-8"/>
     <title>首页</title>
+
+    <script src="/js/jquery/jquery-3.2.1.js"></script>
+
 </head>
 <body>
 
     <!--未登录时-->
-        <h2 align="center">游客好,<a href="login.html" th:href="@{/login}">请登录</a></h2>
+        <h2 align="center">游客好,<a href="login.html" th:href="@{/login.html}">请登录</a></h2>
 
     <!--已登录时-->
 
     <!--登出-->
-    <button type="submit">退出</button>
+    <button type="button" onclick="uout()">退出</button>
+    <script>
+        //退出,跳转到登录页
+        function uout(){
+            $.get("user/logout",{},function(data){});
+            location.href="/login.html";
+        }
+    </script>
 
 </body>
 </html>

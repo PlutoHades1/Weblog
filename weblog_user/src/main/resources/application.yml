@@ -97,7 +97,7 @@ feign:
 
 # slf4j日志配置, 默认info
 logging:
-  #日志文件file or path(选其一)
+  #日志文件file or path(选其一,file指文件,path指目录)
   path: /home/micat/log/
   #输出格式: %d指时间，%thread指线程名，%-5level级别从左显示5个宽度，%logger{50}指logger名(限制<50字符) %msg日志消息
 #  pattern:

@@ -8,18 +8,18 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class User implements Serializable {
+//    @Pattern(regexp = "(^[\\w.\\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\\.)+[a-z]{2,3}$)|(^1[3|4|5|8]\\d{9}$)")
+
     private Integer id; //用户ID
 
     @NotNull
     @Size(min = 4,max = 10)
-    private String nickname;    //昵称
+    private String username;    //昵称
 
-    @NotNull
-    @Pattern(regexp = "(^[\\w.\\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\\.)+[a-z]{2,3}$)|(^1[3|4|5|8]\\d{9}$)")
-    private String username;    //账号
-
+    @Pattern(regexp = "^1[3|4|5|8]\\d{9}")
     private String phone;    //手机号
 
+    @Email
     private String email;   //邮箱
 
     @NotNull
@@ -50,14 +50,6 @@ public class User implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname == null ? null : nickname.trim();
     }
 
     public String getUsername() {
@@ -136,7 +128,6 @@ public class User implements Serializable {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", nickname='" + nickname + '\'' +
                 ", username='" + username + '\'' +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +

@@ -25,7 +25,7 @@ public interface UserMapper {
      * @param id
      * @param head
      */
-    @Update("update blog_user set head=#{head} where id=#{id}")
+    @Update("update blog_vuser set head=#{head} where id=#{id}")
     void setHead(@Param("id") Integer id,@Param("head") String head);
 
     /**
@@ -33,7 +33,7 @@ public interface UserMapper {
      * @param id
      * @param state
      */
-    @Update("update blog_user set state=#{state} where id=#{id}")
+    @Update("update blog_vuser set state=#{state} where id=#{id}")
     void setState(@Param("id") Integer id,@Param("state") Byte state);
 
     /**
@@ -41,7 +41,7 @@ public interface UserMapper {
      * @param id
      * @param password
      */
-    @Update("update blog_user set password=#{password} where id=#{id}")
+    @Update("update blog_vuser set password=#{password} where id=#{id}")
     void changePassword(@Param("id")Integer id,@Param("password")String password);
 
     /**
@@ -49,7 +49,13 @@ public interface UserMapper {
      * @param username
      * @return
      */
-    @Select("select *from blog_user where username=#{username}")
+    @Select("select *from blog_vuser where username=#{username}")
     User selectByUsername(@Param("username") String username);
 
+    /**
+     * 根据username查询user
+     * @param call
+     * @return
+     */
+    User selectByCall(@Param("call")String call,@Param("type") int type);
 }

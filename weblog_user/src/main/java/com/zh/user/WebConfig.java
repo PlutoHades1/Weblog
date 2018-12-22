@@ -1,7 +1,11 @@
 package com.zh.user;
 
+import com.zh.user.entity.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -17,18 +21,18 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * mvc:view-controller使用场景是在：一般springmvc都是经过Controller,
-     * 但是当我们不想经过Controller，而是直接访问视图的时候,
-     * 就可以通过<mvc:view-controller path="/" view-name="xx"/>。
+     * (默认使用Jdk的序列化策略)
+     * 自定义为Json序列化
      */
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("/login");
-        registry.addViewController("/login").setViewName("/login");
+    @Bean
+    public RedisTemplate<Object, User> diyredisTemplate(RedisConnectionFactory redisCF){
+        RedisTemplate<Object, User> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisCF);
 
-        registry.addViewController("/hello").setViewName("/hello");
-        registry.addViewController("/error").setViewName("/error");
+        Jackson2JsonRedisSerializer<User> json = new Jackson2JsonRedisSerializer<>(User.class);
 
+        redisTemplate.setDefaultSerializer(json);
+        return redisTemplate;
     }
 
 

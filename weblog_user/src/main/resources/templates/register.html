@@ -11,13 +11,9 @@
 
 <h1>用户注册</h1>
 
-<form th:method="post" th:action="@{/user/register}" >
-    <label>昵称:</label>
-    <input type="text" id="nickname" name="nickname" value="" minlength="4" maxlength="20" onblur="cnickname(this)" onfocus="clearSpan(this)" required="required" >
-    <span></span><br>
-
-    <label>账号:</label>
-    <input type="text" id="username" name="username" value="" onblur="cname(this)" onfocus="clearSpan(this)" required="required" >
+<form method="post" action="/user/register" th:method="post" th:action="@{/user/register}" >
+    <label>用户名:</label>
+    <input type="text" id="username" name="username" value="" minlength="4" maxlength="20" onblur="cusername(this)" onfocus="clearSpan(this)" required="required" >
     <span></span><br>
 
     <label>密码:</label>
@@ -26,6 +22,14 @@
 
     <label>确认密码:</label>
     <input type="password" id="repassword" name="" value="" onfocus="clearSpan(this)" onblur="crepassword()" required="required" >
+    <span></span><br>
+
+    <label>手机号/邮箱:</label>
+    <input type="text" id="call" name="call" value="" onfocus="clearSpan(this)" onblur="ccall(this)" pattern="(^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$)|(^1[3|4|5|8]\d{9}$)" required="required">
+    <span></span><br>
+
+    <label>验证码:</label>
+    <input type="number" id="code" name="code" value="" onfocus="clearSpan(this)" onblur="ccode(this)" required="required">
     <span></span><br>
 
     <a href="javascript:void(0)" onclick="infoSubmit()">注册</a><br>
@@ -38,15 +42,25 @@
         span.text("");
         span.css("color","gray");
     }
-    //验证昵称
-    function cnickname(e){
+    //验证用户名
+    function cusername(e){
+        var state = true;
         if(!e.checkValidity()){
             var span = $(e).next();
-            span.text("昵称必须4-20个字符");
+            span.text("用户名必须4-20个字符(如a-z_A-Z)");
             span.css("color","red");
             return false;
+        }else{
+            var val = $(e).val();
+            $.get("user/checkname",{username:val},function(data){
+                if(data.code!=2000){
+                    $("#username").next().text(data.msg);
+                    state = false;
+                }
+            });
         }
-        return true;
+        return state;
+
     }
     //验证密码
     function cpassword(e){
@@ -69,19 +83,32 @@
         return true;
     }
 
-    //验证账号
-    function cname(e){
+    //验正码
+    function ccode(e){
+        if(!e.checkValidity()){
+            var span = $(e).next();
+            span.text("验证码不能为空");
+            span.css("color","red");
+            return false;
+        }
+        return true;
+    }
+
+    //验证手机/邮箱
+    function ccall(e){
         var state = true;
         if(!e.checkValidity()){
-            var span = $("#username").next();
-            span.text("手机号格式不正确");
+            //验证格式
+            var span = $(e).next();
+            span.text("手机号或邮箱格式不正确");
             span.css("color","red");
             state = false;
         }else{
+            //验证是否已存在
             var val = $(e).val();
-            $.get("user/username",{username:val},function(data){
+            $.get("user/checkcall",{call:val},function(data){
                 if(data.code!=2000){
-                    $("#username").next().text(data.msg);
+                    $(e).next().text(data.msg);
                     state = false;
                 }
             });
@@ -91,13 +118,13 @@
 
     //验证表单
     function checkForm(){
-        if(!cnickname($("#nickname")[0]))
-            return false;
-        if(!cname($("#username")[0]))
+        if(!cusername($("#username")[0]))
             return false;
         if(!cpassword($("#password")[0]))
             return false;
         if(!crepassword())
+            return false;
+        if(!ccode($("#code")[0]))
             return false;
         return true;
     }
@@ -105,7 +132,7 @@
     //提交表单
     function infoSubmit(){
         if(checkForm()){
-            $(form).submit();
+            $("form").submit();
         }
     }
 </script>

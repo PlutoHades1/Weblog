@@ -64,10 +64,16 @@ public interface UserService {
     User findById(Integer id);
 
     /**
-     * 根据User账号查询User
+     * 根据Username查询User
      * @param username
      * @return
      */
     User findByUsername(String username);
 
+    /**
+     * 根据手机号/邮箱 查询User
+     * @param call
+     * @return
+     */
+    User findByCall(String call);
 }

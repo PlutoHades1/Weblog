@@ -5,18 +5,20 @@
 
     <title>登录</title>
 
-    <script type="text/javascript" src="/jquery/jquery-3.2.1.js"></script>
+    <script src="/js/jquery/jquery-3.2.1.js"></script>
 
 </head>
 <body>
 
 <div>
     <h2>欢迎登录Weblog</h2>
-    <form th:method="post" th:action="@{/user/login}" >
+    <form method="post" action="/user/login" th:method="post" th:action="@{/user/login}" >
         <span id="tip"></span>
-        <input type="text" id="input1" name="username" value="" onfocus="clearSpan(this)" required="required" th:placeholder="手机号/邮箱.." autofocus/><br>
-        <input type="password" id="input2" name="password" value="" onfocus="clearSpan(this)" required="required" th:placeholder="密码.."/><br>
-        <button id="submit" type="button" onclick="infoSubmit()">Login</button><br>
+        <input type="text" id="input1" name="username" value="" onfocus="clearSpan(this)" required="required" placeholder="手机号/邮箱.." autofocus/><br>
+        <input type="password" id="input2" name="password" value="" onfocus="clearSpan(this)" required="required" placeholder="密码.."/><br>
+        <input type="text" id="input3" name="checkcode" value="" required ><div>验证码</div>
+
+        <button type="button" onclick="infoSubmit()">Login</button><br>
         <p>没账号?<a href="register.html" th:href="@{/register.html}" >点我注册吧</a></p>
     </form>
     <script>
@@ -29,8 +31,8 @@
 
         //校验表单
         function checkForm(){
-            var s1 = $("#input1").checkValidity();
-            var s2 = $("#input2").checkValidity();
+            var s1 = $("#input1")[0].checkValidity();
+            var s2 = $("#input2")[0].checkValidity();
 
             if(s1 && s2)
                 return true;
@@ -43,7 +45,7 @@
         //提交表单
         function infoSubmit(){
             if(checkForm()){
-                $(form).submit();
+                $("form").submit();
             }
         }
     </script>
