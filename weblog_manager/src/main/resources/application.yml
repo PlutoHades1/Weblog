@@ -1,0 +1,37 @@
+
+server:
+  port: 8800
+
+
+spring:
+  #应用名
+  application:
+    name: weblogManager
+
+#Eureka,注册成为Eureka的客户端
+eureka:
+  client:
+    #eureka服务端的地址
+    service-url:
+      defaultZone: http://127.0.0.1:8801/eureka/
+  instance:
+    #在eureka管理页面可以显示 服务的昵称
+    instance-id: weblog-manager
+    #在eureka管理页面可以显示 服务的IP地址
+    prefer-ip-address: true
+
+#Zuul,网关配置
+zuul:
+  routes:
+    #用户模块
+    weblogUser:
+      path: /user/**
+      serviceId: weblog-user
+    #文章模块
+    weblogArticle:
+      path: /article/**
+      serviceId: weblog-article
+    #权限模块
+
+    #活动模块
+

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="eureka" />
+        <module name="weblog_activity" />
+        <module name="weblog_article" />
+        <module name="weblog_common" />
+        <module name="weblog_manager" />
+        <module name="weblog_sms" />
+        <module name="weblog_sys" />
+        <module name="weblog_user" />
+        <module name="weblog_web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="activity" target="1.8" />
+      <module name="article" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="activity" options="-parameters" />
+      <module name="article" options="-parameters" />
+      <module name="eureka" options="-parameters" />
+      <module name="weblog_activity" options="-parameters" />
+      <module name="weblog_article" options="-parameters" />
+      <module name="weblog_common" options="-parameters" />
+      <module name="weblog_manager" options="-parameters" />
+      <module name="weblog_sms" options="-parameters" />
+      <module name="weblog_sys" options="-parameters" />
+      <module name="weblog_user" options="-parameters" />
+      <module name="weblog_web" options="-parameters" />
+    </option>
+  </component>
+</project>

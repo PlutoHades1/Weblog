@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+
+    <title></title>
+    <style>
+        * {
+            margin: 0px auto;
+            padding: 0px;
+        }
+
+        a {
+            text-decoration: none;
+            color: gray;
+        }
+
+        a:hover {
+            cursor: pointer;
+            color: #444444;
+            text-decoration: underline;
+        }
+
+        div {
+            width: 304px;
+            position: relative;
+            margin: 200px auto;
+        }
+
+        input {
+            width: 300px;
+            height: 40px;
+            margin-top: 10px;
+            font-size: 16px;
+            padding-left: 10px;
+        }
+
+        #submit {
+            width: 314px;
+            height: 40px;
+            border: none;
+            margin-top: 10px;
+            font-size: 16px;
+            background-color: orange;
+
+        }
+
+        #submit:hover {
+            cursor: pointer;
+            background-color: darkorange;
+        }
+
+        p {
+            position: relative;
+            left: 200px;
+            font-size: 12px;
+        }
+    </style>
+    <script type="text/javascript" src="/jquery/jquery-3.2.1.js"></script>
+
+</head>
+<body>
+
+<div>
+    <form action="/user/login" method="post">
+        <input id="username" name="username" value="" type="text" th:placeholder="#{login.username}" autofocus/><br>
+        <input id="password" name="passwd" value="" type="password" th:placeholder="#{login.passwd}"/><br>
+        <button id="submit" type="submit">Login</button>
+        <br>
+        <p>忘记密码?<a href="../../../../../weblog_user/src/main/resources/templates/register.html">联系管理员</a></p>
+    </form>
+</div>
+
+<div class="sliderBox">
+    <div id="slider" class="slider" style="padding: 0 5px">
+    </div>
+</div>
+
+<script>
+
+
+</script>
+</body>
+</html>

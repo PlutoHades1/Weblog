@@ -1,0 +1,14 @@
+#Eureka端口
+server:
+  port: 8081
+
+#Eureka配置
+eureka:
+  client:
+    #不将自己注册到Eureka服务中
+    register-with-eureka: false
+    #不从Eureka中获取注册信息
+    fetch-registry: false
+    #Eureka客户端与Eureka服务端交互的URL
+    service-url:
+      defaultZone: http://127.0.0.1:${server.port}/eureka/

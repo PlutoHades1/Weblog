@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+
+    <script src="/js/jquery/jquery-3.2.1.js"></script>
+
+</head>
+<body>
+
+<h1>用户注册</h1>
+
+<form th:method="post" th:action="@{/user/register}" >
+    <label>昵称:</label>
+    <input type="text" id="nickname" name="nickname" value="" minlength="4" maxlength="20" onblur="cnickname(this)" onfocus="clearSpan(this)" required="required" >
+    <span></span><br>
+
+    <label>账号:</label>
+    <input type="text" id="username" name="username" value="" onblur="cname(this)" onfocus="clearSpan(this)" required="required" >
+    <span></span><br>
+
+    <label>密码:</label>
+    <input type="password" id="password" name="password" value="" minlength="4" maxlength="10" onblur="cpassword(this)" onfocus="clearSpan(this)" required="required" >
+    <span></span><br>
+
+    <label>确认密码:</label>
+    <input type="password" id="repassword" name="" value="" onfocus="clearSpan(this)" onblur="crepassword()" required="required" >
+    <span></span><br>
+
+    <a href="javascript:void(0)" onclick="infoSubmit()">注册</a><br>
+</form>
+<script>
+
+    //清除校验消息
+    function clearSpan(e){
+        var span = $(e).next();
+        span.text("");
+        span.css("color","gray");
+    }
+    //验证昵称
+    function cnickname(e){
+        if(!e.checkValidity()){
+            var span = $(e).next();
+            span.text("昵称必须4-20个字符");
+            span.css("color","red");
+            return false;
+        }
+        return true;
+    }
+    //验证密码
+    function cpassword(e){
+        if(!e.checkValidity()){
+            var span = $(e).next();
+            span.text("密码必须4-10个字符");
+            span.css("color","red");
+            return false;
+        }
+        return true;
+    }
+    //验证重复密码
+    function crepassword(){
+        if($("#repassword").val()!=$("#password").val()){
+            var span = $("#repassword").next();
+            span.text("两次密码不一致");
+            span.css("color","red");
+            return false;
+        }
+        return true;
+    }
+
+    //验证账号
+    function cname(e){
+        var state = true;
+        if(!e.checkValidity()){
+            var span = $("#username").next();
+            span.text("手机号格式不正确");
+            span.css("color","red");
+            state = false;
+        }else{
+            var val = $(e).val();
+            $.get("user/username",{username:val},function(data){
+                if(data.code!=2000){
+                    $("#username").next().text(data.msg);
+                    state = false;
+                }
+            });
+        }
+        return state;
+    }
+
+    //验证表单
+    function checkForm(){
+        if(!cnickname($("#nickname")[0]))
+            return false;
+        if(!cname($("#username")[0]))
+            return false;
+        if(!cpassword($("#password")[0]))
+            return false;
+        if(!crepassword())
+            return false;
+        return true;
+    }
+
+    //提交表单
+    function infoSubmit(){
+        if(checkForm()){
+            $(form).submit();
+        }
+    }
+</script>
+
+</body>
+</html>
