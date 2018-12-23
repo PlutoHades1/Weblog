@@ -1,15 +1,17 @@
 #SpringBoot的Debug
 #debug: true
 
+#----服务器端口----
 server:
-  port: 8082
+  port: 8087
 
+#----Spring配置----
 spring:
   #应用名
   application:
     name: weblog-user
 
-  #开发时可以禁用模板缓存
+  #Thymeleaf 开发时可以禁用模板缓存
   thymeleaf:
     cache: false
     prefix: classpath:/templates/
@@ -22,15 +24,13 @@ spring:
       - classpath:/static/
       - classpath:/templates/
 
-  #jdbc
+  #JDBC
   datasource:
     username: root
     password: 1109
     url: jdbc:mysql://localhost/weblog?characterEncoding=UTF-8&useSSL=true
     driver-class-name: com.mysql.cj.jdbc.Driver
-    #指定sql文件位置(如建表sql)，会自动运行sql
-    #schema:
-      #- classpath:
+
     # 指定数据池
     type: com.alibaba.druid.pool.DruidDataSource
     #JPA配置
@@ -38,7 +38,6 @@ spring:
       #hibernate:
         #ddl-auto: update
         #show-sql: true
-
 
   #邮件
   mail:
@@ -52,7 +51,7 @@ spring:
       mail.smtp.ssl.enable: true
       mail.smtp.auth: true
 
-#Mybatis配置
+#----Mybatis配置----
 mybatis:
   mapper-locations: classpath:com/zh/user/dao/*.xml
 #  config-location: classpath:
@@ -78,7 +77,7 @@ mybatis:
       cluster-nodes: localhost:9300
 
 
-#Eureka,注册成为Eureka的客户端
+#----Eureka,注册成为Eureka的客户端----
 eureka:
   client:
     #eureka服务端的地址
@@ -90,12 +89,12 @@ eureka:
     #在eureka管理页面可以显示 服务的IP地址
     prefer-ip-address: true
 
-#Feign,开启熔断器
+#----Feign,开启熔断器----
 feign:
   hystrix:
     enabled: true
 
-# slf4j日志配置, 默认info
+#----slf4j日志配置, 默认info ----
 logging:
   #日志文件file or path(选其一,file指文件,path指目录)
   path: /home/micat/log/

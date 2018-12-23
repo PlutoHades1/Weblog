@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息</title>
+    <script src="/js/jquery/jquery-3.2.1.js"></script>
+
+
+</head>
+<body>
+
+
+<div>
+    <!--头像展示-->
+    <img src="/img/head.jpeg" onclick="javascript:$('#pitfile').click()" class="img-circle">
+</div>
+
+    <!-- 头像提交表单 -->
+    <iframe id="headifra" name="headiframe" style="display:none">
+    </iframe>
+    <form id="headform"  name="headform" target="headiframe" method="post" action="headpiture" enctype="multipart/form-data">
+        <input type="file" id="pitfile" name="pitfile" accept="image/*" style="display: none" capture="camera">
+    </form>
+
+<script>
+    $(function() {
+        $("#pitfile").change(function() {
+            $("#headform").submit();
+        });
+    });
+</script>
+</body>
+</html>

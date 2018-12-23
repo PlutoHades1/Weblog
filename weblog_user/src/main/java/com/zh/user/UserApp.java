@@ -17,8 +17,6 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.concurrent.CountDownLatch;
-
 /**
  * 主程序类
  */
@@ -31,12 +29,11 @@ import java.util.concurrent.CountDownLatch;
 @EnableFeignClients
 //扫描Mybatis的mapper
 @MapperScan("com.zh.user.dao")
-public class App{
+public class UserApp {
     public static void main(String[] args) {
         //启动应用
-        SpringApplication.run(App.class);
+        SpringApplication.run(UserApp.class);
     }
-
 
 
     @Bean
@@ -60,7 +57,7 @@ public class App{
     }
 
 
-    @Bean
+    /*@Bean
     RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
                                             MessageListenerAdapter listenerAdapter) {
 
@@ -69,15 +66,15 @@ public class App{
         container.addMessageListener(listenerAdapter, new PatternTopic("chat"));
 
         return container;
-    }
+    }*/
 
 
 
 
-    @Bean
+    /*@Bean
     StringRedisTemplate template(RedisConnectionFactory connectionFactory) {
         return new StringRedisTemplate(connectionFactory);
-    }
+    }*/
 
     /**
      * 自定义修改缓存管理器

@@ -64,6 +64,7 @@ public class UserController {
 
         Map<String,String> map = new HashMap<>(1);
         map.put("toUrl","/index.html");
+        map.put("userId",""+user.getId());
         return RResult.success(map);
     }
 
@@ -72,6 +73,8 @@ public class UserController {
      */
     @GetMapping("/logout/{id}")
     public RResult logout(@PathVariable("id") Integer id, HttpServletResponse resp){
+
+        System.out.println(redisTemp.opsForValue().get("user_"+id));
 
         redisTemp.delete("user_" + id);
 
@@ -85,8 +88,9 @@ public class UserController {
      * 更改用户头像
      * 头像保存到文件服务器
      */
+    @PutMapping("/head/{id}")
     @ResponseBody
-    public RResult head(Integer id){
+    public RResult head(@PathVariable("id") Integer id){
         //TODO 需要头像的信息
 //        userService.head(id,"");
         return RResult.success();

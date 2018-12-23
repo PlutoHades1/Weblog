@@ -17,3 +17,8 @@ web: 8088
 更改账号: /user/update/{id}     -put
 检查username: /user/checkname   -get
 检查手机号/邮箱: /user/checkcall  -get
+
+//article api
+文章添加:
+文章删除:
+文章修改:
