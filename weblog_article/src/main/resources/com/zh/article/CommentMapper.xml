@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zh.article.dao.CommentMapper">
+  <resultMap id="BaseResultMap" type="com.zh.article.entity.Comment">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="article" jdbcType="INTEGER" property="article" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="publish" jdbcType="TIMESTAMP" property="publish" />
+    <result column="author_id" jdbcType="INTEGER" property="authorId" />
+    <result column="author_name" jdbcType="VARCHAR" property="authorName" />
+    <result column="seq" jdbcType="TINYINT" property="seq" />
+    <result column="reply_user_id" jdbcType="INTEGER" property="replyUserId" />
+    <result column="reply_seq" jdbcType="TINYINT" property="replySeq" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, user_name, article, content, publish, author_id, author_name, seq, reply_user_id, 
+    reply_seq
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from blog_comment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from blog_comment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zh.article.entity.Comment">
+    insert into blog_comment (id, user_id, user_name, 
+      article, content, publish, 
+      author_id, author_name, seq, 
+      reply_user_id, reply_seq)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
+      #{article,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{publish,jdbcType=TIMESTAMP}, 
+      #{authorId,jdbcType=INTEGER}, #{authorName,jdbcType=VARCHAR}, #{seq,jdbcType=TINYINT}, 
+      #{replyUserId,jdbcType=INTEGER}, #{replySeq,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zh.article.entity.Comment">
+    insert into blog_comment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="article != null">
+        article,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="publish != null">
+        publish,
+      </if>
+      <if test="authorId != null">
+        author_id,
+      </if>
+      <if test="authorName != null">
+        author_name,
+      </if>
+      <if test="seq != null">
+        seq,
+      </if>
+      <if test="replyUserId != null">
+        reply_user_id,
+      </if>
+      <if test="replySeq != null">
+        reply_seq,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="article != null">
+        #{article,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="publish != null">
+        #{publish,jdbcType=TIMESTAMP},
+      </if>
+      <if test="authorId != null">
+        #{authorId,jdbcType=INTEGER},
+      </if>
+      <if test="authorName != null">
+        #{authorName,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=TINYINT},
+      </if>
+      <if test="replyUserId != null">
+        #{replyUserId,jdbcType=INTEGER},
+      </if>
+      <if test="replySeq != null">
+        #{replySeq,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zh.article.entity.Comment">
+    update blog_comment
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="article != null">
+        article = #{article,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="publish != null">
+        publish = #{publish,jdbcType=TIMESTAMP},
+      </if>
+      <if test="authorId != null">
+        author_id = #{authorId,jdbcType=INTEGER},
+      </if>
+      <if test="authorName != null">
+        author_name = #{authorName,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=TINYINT},
+      </if>
+      <if test="replyUserId != null">
+        reply_user_id = #{replyUserId,jdbcType=INTEGER},
+      </if>
+      <if test="replySeq != null">
+        reply_seq = #{replySeq,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zh.article.entity.Comment">
+    update blog_comment
+    set user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      article = #{article,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      publish = #{publish,jdbcType=TIMESTAMP},
+      author_id = #{authorId,jdbcType=INTEGER},
+      author_name = #{authorName,jdbcType=VARCHAR},
+      seq = #{seq,jdbcType=TINYINT},
+      reply_user_id = #{replyUserId,jdbcType=INTEGER},
+      reply_seq = #{replySeq,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
