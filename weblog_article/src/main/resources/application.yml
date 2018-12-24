@@ -3,13 +3,13 @@
 
 #----服务器端口----
 server:
-  port: 8087
+  port: 8083
 
 #----Spring配置----
 spring:
   #应用名
   application:
-    name: weblog-user
+    name: weblog-article
 
   #Thymeleaf 开发时可以禁用模板缓存
   thymeleaf:

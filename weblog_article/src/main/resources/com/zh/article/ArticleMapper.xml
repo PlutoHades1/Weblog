@@ -11,6 +11,200 @@
     <result column="category" jdbcType="INTEGER" property="category" />
     <result column="state" jdbcType="TINYINT" property="state" />
     <result column="favorite_count" jdbcType="SMALLINT" property="favoriteCount" />
+    <result column="lclick_count" jdbcType="SMALLINT" property="lclickCount" />
+    <result column="recommend" jdbcType="TINYINT" property="recommend" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zh.article.entity.Article">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, title, profile, publish, author_id, author_name, category, state, favorite_count, 
+    lclick_count, recommend
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from blog_article
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from blog_article
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zh.article.entity.Article">
+    insert into blog_article (id, title, profile, 
+      publish, author_id, author_name, 
+      category, state, favorite_count, 
+      lclick_count, recommend, content
+      )
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{profile,jdbcType=VARCHAR}, 
+      #{publish,jdbcType=TIMESTAMP}, #{authorId,jdbcType=INTEGER}, #{authorName,jdbcType=VARCHAR}, 
+      #{category,jdbcType=INTEGER}, #{state,jdbcType=TINYINT}, #{favoriteCount,jdbcType=SMALLINT}, 
+      #{lclickCount,jdbcType=SMALLINT}, #{recommend,jdbcType=TINYINT}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zh.article.entity.Article">
+    insert into blog_article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="profile != null">
+        profile,
+      </if>
+      <if test="publish != null">
+        publish,
+      </if>
+      <if test="authorId != null">
+        author_id,
+      </if>
+      <if test="authorName != null">
+        author_name,
+      </if>
+      <if test="category != null">
+        category,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="favoriteCount != null">
+        favorite_count,
+      </if>
+      <if test="lclickCount != null">
+        lclick_count,
+      </if>
+      <if test="recommend != null">
+        recommend,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="profile != null">
+        #{profile,jdbcType=VARCHAR},
+      </if>
+      <if test="publish != null">
+        #{publish,jdbcType=TIMESTAMP},
+      </if>
+      <if test="authorId != null">
+        #{authorId,jdbcType=INTEGER},
+      </if>
+      <if test="authorName != null">
+        #{authorName,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null">
+        #{category,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="favoriteCount != null">
+        #{favoriteCount,jdbcType=SMALLINT},
+      </if>
+      <if test="lclickCount != null">
+        #{lclickCount,jdbcType=SMALLINT},
+      </if>
+      <if test="recommend != null">
+        #{recommend,jdbcType=TINYINT},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zh.article.entity.Article">
+    update blog_article
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="profile != null">
+        profile = #{profile,jdbcType=VARCHAR},
+      </if>
+      <if test="publish != null">
+        publish = #{publish,jdbcType=TIMESTAMP},
+      </if>
+      <if test="authorId != null">
+        author_id = #{authorId,jdbcType=INTEGER},
+      </if>
+      <if test="authorName != null">
+        author_name = #{authorName,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null">
+        category = #{category,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="favoriteCount != null">
+        favorite_count = #{favoriteCount,jdbcType=SMALLINT},
+      </if>
+      <if test="lclickCount != null">
+        lclick_count = #{lclickCount,jdbcType=SMALLINT},
+      </if>
+      <if test="recommend != null">
+        recommend = #{recommend,jdbcType=TINYINT},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zh.article.entity.Article">
+    update blog_article
+    set title = #{title,jdbcType=VARCHAR},
+      profile = #{profile,jdbcType=VARCHAR},
+      publish = #{publish,jdbcType=TIMESTAMP},
+      author_id = #{authorId,jdbcType=INTEGER},
+      author_name = #{authorName,jdbcType=VARCHAR},
+      category = #{category,jdbcType=INTEGER},
+      state = #{state,jdbcType=TINYINT},
+      favorite_count = #{favoriteCount,jdbcType=SMALLINT},
+      lclick_count = #{lclickCount,jdbcType=SMALLINT},
+      recommend = #{recommend,jdbcType=TINYINT},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zh.article.entity.Article">
+    update blog_article
+    set title = #{title,jdbcType=VARCHAR},
+      profile = #{profile,jdbcType=VARCHAR},
+      publish = #{publish,jdbcType=TIMESTAMP},
+      author_id = #{authorId,jdbcType=INTEGER},
+      author_name = #{authorName,jdbcType=VARCHAR},
+      category = #{category,jdbcType=INTEGER},
+      state = #{state,jdbcType=TINYINT},
+      favorite_count = #{favoriteCount,jdbcType=SMALLINT},
+      lclick_count = #{lclickCount,jdbcType=SMALLINT},
+      recommend = #{recommend,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <resultMap id="BaseResultMap" type="com.zh.article.entity.Article">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="profile" jdbcType="VARCHAR" property="profile" />
+    <result column="publish" jdbcType="TIMESTAMP" property="publish" />
+    <result column="author_id" jdbcType="INTEGER" property="authorId" />
+    <result column="author_name" jdbcType="VARCHAR" property="authorName" />
+    <result column="category" jdbcType="INTEGER" property="category" />
+    <result column="state" jdbcType="TINYINT" property="state" />
+    <result column="favorite_count" jdbcType="SMALLINT" property="favoriteCount" />
     <result column="recommend" jdbcType="TINYINT" property="recommend" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zh.article.entity.Article">

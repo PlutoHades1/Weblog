@@ -1,4 +1,4 @@
-package com.zh.sms;
+package com.zh.sms.service;
 import com.github.qcloudsms.SmsSingleSender;
 import com.github.qcloudsms.SmsSingleSenderResult;
 import com.github.qcloudsms.httpclient.HTTPException;

@@ -28,13 +28,24 @@ public interface ArticleMapper {
 
     /**
      * 根据auID查找 Article
+     * 默认最新排序
      * @param auId
      * @return
      */
-    @Select("select *from blog_article where author_id=#{auId}")
-    List<Article> selectByAuId(@Param("auId")Integer auId);
+    @Select("select *from blog_article where author_id=#{auId} order by #{orderCd} #{way}")
+    List<Article> selectByAuId(@Param("auId")Integer auId,@Param("orderCd")String orderCd,@Param("way") String way);
 
-    //分类查询
+    /**
+     * 分类查询,
+     * 默认最热,即最近多人访问
+     * @param cId
+     * @param orderCd
+     * @return
+     */
+    @Select("select *from blog_article where category=#{cId} order by #{orderCd}")
+    List<Article> selectByCate(@Param("cId")Integer cId,@Param("orderCd") String orderCd);
+
+
 
     //
 

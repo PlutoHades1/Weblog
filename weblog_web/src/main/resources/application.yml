@@ -31,3 +31,7 @@ zuul:
     weblogArticle:
       path: /article/**
       serviceId: weblog-article
+    #SMS模块
+    weblogSMS:
+      path: /sms/**
+      serviceId: weblog-sms

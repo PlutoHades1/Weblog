@@ -1,5 +1,6 @@
 package com.zh.user;
 
+import com.zh.common.util.JwtUtil;
 import com.zh.user.entity.User;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -10,10 +11,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.listener.PatternTopic;
-import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -29,13 +26,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableFeignClients
 //扫描Mybatis的mapper
 @MapperScan("com.zh.user.dao")
-public class UserApp {
+public class AppUser {
     public static void main(String[] args) {
         //启动应用
-        SpringApplication.run(UserApp.class);
+        SpringApplication.run(AppUser.class);
     }
 
 
+    /**
+     * 密码加密工具
+     * @return
+     */
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
@@ -57,6 +58,7 @@ public class UserApp {
     }
 
 
+
     /*@Bean
     RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
                                             MessageListenerAdapter listenerAdapter) {
@@ -69,12 +71,6 @@ public class UserApp {
     }*/
 
 
-
-
-    /*@Bean
-    StringRedisTemplate template(RedisConnectionFactory connectionFactory) {
-        return new StringRedisTemplate(connectionFactory);
-    }*/
 
     /**
      * 自定义修改缓存管理器

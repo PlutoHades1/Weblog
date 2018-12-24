@@ -3,29 +3,24 @@ package com.zh.user.controller;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
 import com.zh.common.entity.RResult;
 import com.zh.common.entity.StatusCode;
+import com.zh.common.util.JwtUtil;
 import com.zh.user.entity.Feedback;
 import com.zh.user.entity.User;
 import com.zh.user.exception.NotDataException;
 import com.zh.user.service.FeedbackService;
 import com.zh.user.service.UserService;
+import io.jsonwebtoken.Claims;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -36,7 +31,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private Logger logger = LoggerFactory.getLogger(getClass());
     //普通用户角色为user
     private final String ROLE = "user";
 
@@ -47,24 +41,32 @@ public class UserController {
     private FeedbackService feedbackService;
 
     @Resource(name="stringRedisTemplate")
-    StringRedisTemplate strRedisTemp;    //针对字符串
+    private StringRedisTemplate strRedisTemp;    //针对字符串
 
     @Resource(name="redisTemplate")
-    RedisTemplate redisTemp;    //针对对象
+    private RedisTemplate redisTemp;    //针对对象
 
     /**
      * 用户登录,成功后跳转首页
      */
     @PostMapping("/login")
-    public RResult login(@RequestParam("username") String username,@RequestParam("password") String password){
+    public RResult login(HttpServletResponse resp, @RequestParam("username") String username,@RequestParam("password") String password){
         User user = userService.login(username,password);
 
-        //保存登录用户User对象
-        redisTemp.opsForValue().set("user_"+user.getId(),user,30,TimeUnit.MINUTES);
+        //保存loginUser
+//        redisTemp.opsForValue().set("user_"+user.getId(),user,30,TimeUnit.MINUTES);
+
+        //生成Token
+        String token = JwtUtil.createJWT(""+user.getId(), user.getUsername(), ROLE);
+
+        Cookie cookie = new Cookie("token","m_"+token);
+        cookie.setMaxAge(60*30);
+        cookie.setPath("/");
+        resp.addCookie(cookie);
 
         Map<String,String> map = new HashMap<>(1);
         map.put("toUrl","/index.html");
-        map.put("userId",""+user.getId());
+
         return RResult.success(map);
     }
 
@@ -156,19 +158,10 @@ public class UserController {
         //是否已经发送邮件了,若没有发送,则直接激活
         boolean isSend = false;
 
-        //当username为邮箱,则发送激活邮箱;
+        //当username为邮箱,则发送激活邮箱
+        //TODO 需要调用消息队列
         if (user.getUsername().contains("@")){
             String actUrl = "http://localhost:"+req.getLocalPort()+req.getContextPath()+"/user/active/"+id+"_"+(new Date().getTime()+7200000);
-
-            for(int i=0;i<2;i++){
-                try {
-                    sendMail(actUrl,user.getUsername());
-                    isSend = true;
-                    break;
-                } catch (MessagingException e) {
-                    logger.error("激活邮件发送失败.. [cause]:"+e.getCause());
-                }
-            }
         }
 
         if(!isSend)
@@ -222,29 +215,20 @@ public class UserController {
         return RResult.success();
     }
 
-
-    @Autowired
-    private JavaMailSender mailSender;
     /**
-     * HTML邮件
+     * 根据Id查询User
+     *  当ID为0,表示查询当前登录的user
      */
-    private void sendMail(String actUrl,String email) throws MessagingException {
-        //创建邮件
-        MimeMessage msg = mailSender.createMimeMessage();
+    @GetMapping("/find/{id}")
+    public RResult findById(HttpServletRequest req,@PathVariable(value = "id") Integer id){
+        if (id==0){
+            Object user_id = req.getAttribute("user_id");
 
-        //邮件内容,需要MimeMessageHelper类操作
-        MimeMessageHelper helper = new MimeMessageHelper(msg,true);
+        }
 
-        String text = "Hi, "+email+", Weblg欢迎你的加入,请在两小时内激活,激活请点击<a href='"+actUrl+"'>"+actUrl+"</a>";
-        helper.setSubject("激活你的Weblog账号");
-        helper.setText(text,true);
-        helper.setFrom("1406103364@qq.com");
-        helper.setTo(email);
-        //携带附件
-//          helper.addAttachment("文件名",new File("文件路径"));
+        User user = userService.findById(id);
 
-        //发送
-        mailSender.send(msg);
+        return RResult.success(user);
     }
 
 }

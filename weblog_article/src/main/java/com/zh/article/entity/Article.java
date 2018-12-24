@@ -1,29 +1,47 @@
 package com.zh.article.entity;
 
+import org.springframework.data.annotation.Transient;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
-public class Article {
+public class Article implements Serializable {
+    public static final byte HOT = 1;
+    public static final byte NO_HOT = 0;
+
     private Integer id;
 
-    private String title;
+    @NotNull
+    @Size(max = 20)
+    private String title;   //标题
 
-    private String profile;
+    @NotNull
+    @Size(max = 100)
+    private String profile; //简介
 
-    private Date publish;
+    private Date publish;   //发布时间
 
-    private Integer authorId;
+    @NotNull
+    private Integer authorId;   //作者id
 
-    private String authorName;
+    @NotNull
+    private String authorName;  //作者username
 
-    private Integer category;
+    @NotNull
+    private Integer category;   //文章类别
 
-    private Byte state;
+    private Byte state; //文章状态：0草稿，1未审核，2已审核，3审核未过'
 
-    private Short favoriteCount;
+    private Short favoriteCount;  //收藏数
 
-    private Byte recommend;
+    private Short lclickCount;  //最近点击数,每月重置,countX系数
 
-    private String content;
+    private Byte recommend; //是否推荐：0 不，1推荐
+
+    @NotNull
+    private String content; //内容
 
     public Integer getId() {
         return id;
@@ -97,6 +115,14 @@ public class Article {
         this.favoriteCount = favoriteCount;
     }
 
+    public Short getLclickCount() {
+        return lclickCount;
+    }
+
+    public void setLclickCount(Short lclickCount) {
+        this.lclickCount = lclickCount;
+    }
+
     public Byte getRecommend() {
         return recommend;
     }
@@ -111,5 +137,23 @@ public class Article {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", profile='" + profile + '\'' +
+                ", publish=" + publish +
+                ", authorId=" + authorId +
+                ", authorName='" + authorName + '\'' +
+                ", category=" + category +
+                ", state=" + state +
+                ", favoriteCount=" + favoriteCount +
+                ", lclickCount=" + lclickCount +
+                ", recommend=" + recommend +
+                ", content='" + content + '\'' +
+                '}';
     }
 }
