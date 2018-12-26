@@ -7,18 +7,19 @@ import com.zh.common.entity.RResult;
 import com.zh.common.entity.StatusCode;
 import com.zh.common.util.JwtUtil;
 import com.zh.user.entity.Feedback;
-import com.zh.user.entity.User;
+import com.zh.common.entity.User;
 import com.zh.user.exception.NotDataException;
 import com.zh.user.service.FeedbackService;
 import com.zh.user.service.UserService;
-import io.jsonwebtoken.Claims;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -28,9 +29,13 @@ import javax.validation.Valid;
 /**
  * 用户Controller
  */
-@RestController
+@Controller
 @RequestMapping("/user")
+@CrossOrigin
 public class UserController {
+    //日志对象
+    private Logger logger = LoggerFactory.getLogger(UserController.class);
+
     //普通用户角色为user
     private final String ROLE = "user";
 
@@ -50,35 +55,26 @@ public class UserController {
      * 用户登录,成功后跳转首页
      */
     @PostMapping("/login")
-    public RResult login(HttpServletResponse resp, @RequestParam("username") String username,@RequestParam("password") String password){
+    public String login(HttpServletResponse resp, @RequestParam("username") String username,@RequestParam("password") String password){
         User user = userService.login(username,password);
-
-        //保存loginUser
-//        redisTemp.opsForValue().set("user_"+user.getId(),user,30,TimeUnit.MINUTES);
 
         //生成Token
         String token = JwtUtil.createJWT(""+user.getId(), user.getUsername(), ROLE);
 
         Cookie cookie = new Cookie("token","m_"+token);
-        cookie.setMaxAge(60*30);
+        //cookie.setMaxAge(-1);
         cookie.setPath("/");
         resp.addCookie(cookie);
 
-        Map<String,String> map = new HashMap<>(1);
-        map.put("toUrl","/index.html");
-
-        return RResult.success(map);
+        return "redirect:/index.html";
     }
 
     /**
      * 用户登出
      */
     @GetMapping("/logout/{id}")
+    @ResponseBody
     public RResult logout(@PathVariable("id") Integer id, HttpServletResponse resp){
-
-        System.out.println(redisTemp.opsForValue().get("user_"+id));
-
-        redisTemp.delete("user_" + id);
 
         //跳转登录页面
         Map<String,String> map = new HashMap<>(1);
@@ -120,6 +116,7 @@ public class UserController {
      *      需要填写注销原因,并申请注销,
      */
     @PostMapping("/freeze/{id}")
+    @ResponseBody
     public RResult freeze(@PathVariable("id") Integer id,@Valid Feedback feedback, Errors errors){
         if (errors.hasErrors())
             throw new NotDataException("提交失败,再试一次吧");
@@ -141,6 +138,7 @@ public class UserController {
      * 用户注册
      */
     @PostMapping("/register")
+    @ResponseBody
     public RResult register(String code,String call,HttpServletRequest req, @Valid User user, Errors errors){
         //TODO 校验登录验证码(后期使用滑块验证,或微信扫码)
 
@@ -220,15 +218,27 @@ public class UserController {
      *  当ID为0,表示查询当前登录的user
      */
     @GetMapping("/find/{id}")
-    public RResult findById(HttpServletRequest req,@PathVariable(value = "id") Integer id){
-        if (id==0){
-            Object user_id = req.getAttribute("user_id");
+    @ResponseBody
+    public RResult findById(@CookieValue("token")String token,@RequestAttribute(value = "loginInfo",required = false) Map<String,String> login,@PathVariable(value = "id") Integer id){
 
+        System.out.println(token);
+
+        System.out.println(login.get("id")+" ---  "+login.get("username"));
+
+        if (id==0){
+            if(login==null)
+                throw new NotDataException("id为空,无法获取信息");
+            id = Integer.parseInt(login.get("id"));
         }
+
+        System.out.println(" id ------"+id);
 
         User user = userService.findById(id);
 
+        System.out.println(user);
+
         return RResult.success(user);
+
     }
 
 }

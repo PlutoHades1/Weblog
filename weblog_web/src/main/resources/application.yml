@@ -1,6 +1,6 @@
 
 server:
-  port: 80
+  port: 8088
 
 
 spring:
@@ -13,7 +13,7 @@ eureka:
   client:
     #eureka服务端的地址
     service-url:
-      defaultZone: http://127.0.0.1:8801/eureka/
+      defaultZone: http://127.0.0.1:8081/eureka/
   instance:
     #在eureka管理页面可以显示 服务的昵称
     instance-id: weblog-web
@@ -27,6 +27,8 @@ zuul:
     weblogUser:
       path: /user/**
       serviceId: weblog-user
+      sensitive-headers:
+      custom-sensitive-headers: true
     #文章模块
     weblogArticle:
       path: /article/**
@@ -35,3 +37,5 @@ zuul:
     weblogSMS:
       path: /sms/**
       serviceId: weblog-sms
+  #全局设置
+  sensitive-headers:

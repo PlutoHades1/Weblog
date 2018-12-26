@@ -3,41 +3,13 @@
 
 #----服务器端口----
 server:
-  port: 8083
+  port: 8085
 
 #----Spring配置----
 spring:
   #应用名
   application:
-    name: weblog-article
-
-  #Thymeleaf 开发时可以禁用模板缓存
-  thymeleaf:
-    cache: false
-    prefix: classpath:/templates/
-    suffix: .html
-    encoding: UTF-8
-    mode: HTML5
-
-  resources:
-    static-locations:
-      - classpath:/static/
-      - classpath:/templates/
-
-  #JDBC
-  datasource:
-    username: root
-    password: 1109
-    url: jdbc:mysql://localhost/weblog?characterEncoding=UTF-8&useSSL=true
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-    # 指定数据池
-    type: com.alibaba.druid.pool.DruidDataSource
-    #JPA配置
-    #jpa:
-      #hibernate:
-        #ddl-auto: update
-        #show-sql: true
+    name: weblog-sms
 
   #邮件
   mail:
@@ -63,19 +35,6 @@ spring:
     username: guest
     password: guest
     virtual-host: /
-  data:
-    mongodb:
-      host: localhost
-      database: square
-
-    elasticsearch:
-      cluster-name: elasticsearch
-      cluster-nodes: localhost:9300
-
-#----Mybatis配置----
-mybatis:
-  mapper-locations: classpath:com/zh/user/dao/*.xml
-#  config-location: classpath:
 
 #----Eureka,注册成为Eureka的客户端----
 eureka:
@@ -85,7 +44,7 @@ eureka:
       defaultZone: http://127.0.0.1:8081/eureka/
   instance:
     #在eureka管理页面可以显示 服务的昵称
-    instance-id: weblog-article
+    instance-id: weblog-sms
     #在eureka管理页面可以显示 服务的IP地址
     prefer-ip-address: true
 

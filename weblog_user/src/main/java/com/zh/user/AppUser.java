@@ -1,10 +1,11 @@
 package com.zh.user;
 
-import com.zh.common.util.JwtUtil;
-import com.zh.user.entity.User;
+import com.zh.user.controller.UserFilter;
+import com.zh.common.entity.User;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -13,6 +14,10 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 主程序类
@@ -57,6 +62,20 @@ public class AppUser {
         return redisTemplate;
     }
 
+    /**
+     * 注册Filter
+     */
+    @Bean
+    public FilterRegistrationBean userFilter(){
+        FilterRegistrationBean fr = new FilterRegistrationBean<>();
+        fr.setFilter(new UserFilter());
+        fr.setUrlPatterns(Arrays.asList("/*"));
+        //一些初始化参数
+        Map<String,String> map = new HashMap<>();
+        map.put("exclusions","*.js,*.css,/druid/*");
+        fr.setInitParameters(map);
+        return fr;
+    }
 
 
     /*@Bean

@@ -1,4 +1,4 @@
-package com.zh.user.entity;
+package com.zh.common.entity;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

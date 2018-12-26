@@ -1,7 +1,7 @@
 package com.zh.user.service.impl;
 
 import com.zh.user.dao.UserMapper;
-import com.zh.user.entity.User;
+import com.zh.common.entity.User;
 import com.zh.user.exception.NotDataException;
 import com.zh.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

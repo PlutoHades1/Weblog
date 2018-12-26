@@ -1,6 +1,6 @@
 package com.zh.user.dao;
 
-import com.zh.user.entity.User;
+import com.zh.common.entity.User;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;

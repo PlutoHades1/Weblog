@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class WebFilter extends ZuulFilter {
@@ -35,30 +37,28 @@ public class WebFilter extends ZuulFilter {
         RequestContext context = RequestContext.getCurrentContext();
         HttpServletRequest req = context.getRequest();
 
+        /*String token = req.getHeader("token");
+        if (token!=null){
+            if (token.startsWith("m_")){
+                context.addZuulRequestHeader("token",token);
+            }else{
+
+            }
+        }*/
 
         Cookie[] cookies = req.getCookies();
-        for (Cookie co:cookies){
-            if (co.getName().equals("token")) {
-                String token = co.getValue();
-                if (!token.startsWith("m_")) {
-                    context.setSendZuulResponse(false);
-                    break;
+        if (cookies!=null){
+            for (Cookie co:cookies){
+                if (co.getName().equals("token")){
+                    String token = co.getValue();
+                    if (!token.startsWith("m_")){
+                        context.setSendZuulResponse(false);
+                        break;
+                    }
                 }
-
-                Claims claims = JwtUtil.parseJWT(token);
-                String id = claims.getId();
-                String subject = claims.getSubject();
-
-                req.setAttribute("",);
-                req.setAttribute("",subject);
-
-                context.addZuulRequestHeader("user_id",id);
-                context.addZuulRequestHeader("user_name",subject);
-
-                break;
             }
-
         }
+
         //表示网Request的Header中添加数据
 //        context.addZuulRequestHeader("","");
 

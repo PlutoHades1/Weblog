@@ -5,21 +5,21 @@
 
     <title>登录</title>
 
-    <script src="/js/jquery/jquery-3.2.1.js"></script>
+    <script src="http://localhost:8087/js/jquery/jquery-3.2.1.js"></script>
 
 </head>
 <body>
 
 <div>
     <h2>欢迎登录Weblog</h2>
-    <form method="post" action="/user/login" th:method="post" th:action="@{/user/login}" >
+    <form method="post" action="user/login" th:method="post" th:action="@{/user/login}" >
         <span id="tip"></span>
         <input type="text" id="input1" name="username" value="" onfocus="clearSpan(this)" required="required" placeholder="用户名.." autofocus/><br>
         <input type="password" id="input2" name="password" value="" onfocus="clearSpan(this)" required="required" placeholder="密码.."/><br>
         <input type="text" id="input3" name="checkcode" value="" required ><div>验证码</div>
 
         <button type="button" onclick="infoSubmit()">Login</button><br>
-        <p>没账号?<a href="register.html" th:href="@{/register.html}" >点我注册吧</a></p>
+        <p>没账号?<a href="register.html" th:href="@{/templates/register.html}" >点我注册吧</a></p>
     </form>
     <script>
         //清除校验消息
@@ -45,6 +45,9 @@
         //提交表单
         function infoSubmit(){
             if(checkForm()){
+                $("form").submit();
+            }
+            /*if(checkForm()){
                 $.ajax({
                     url: "user/login",
                     type: "post",
@@ -56,7 +59,7 @@
                             location.reload();
                     }
                 });
-            }
+            }*/
         }
     </script>
 </div>

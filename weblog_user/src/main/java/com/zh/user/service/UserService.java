@@ -1,6 +1,6 @@
 package com.zh.user.service;
 
-import com.zh.user.entity.User;
+import com.zh.common.entity.User;
 
 /**
  * User信息的管理
