@@ -11,6 +11,7 @@
         <module name="weblog_article" />
         <module name="weblog_common" />
         <module name="weblog_manager" />
+        <module name="weblog_search" />
         <module name="weblog_sms" />
         <module name="weblog_sys" />
         <module name="weblog_user" />
@@ -31,6 +32,7 @@
       <module name="weblog_article" options="-parameters" />
       <module name="weblog_common" options="-parameters" />
       <module name="weblog_manager" options="-parameters" />
+      <module name="weblog_search" options="-parameters" />
       <module name="weblog_sms" options="-parameters" />
       <module name="weblog_sys" options="-parameters" />
       <module name="weblog_user" options="-parameters" />

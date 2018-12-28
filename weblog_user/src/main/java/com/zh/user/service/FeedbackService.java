@@ -1,7 +1,7 @@
 package com.zh.user.service;
 
 import com.zh.common.entity.PageBean;
-import com.zh.user.entity.Feedback;
+import com.zh.common.entity.Feedback;
 
 /**
  * Feedback信息的管理

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zh.user.dao.FeedbackMapper">
-  <resultMap id="BaseResultMap" type="com.zh.user.entity.Feedback">
+  <resultMap id="BaseResultMap" type="com.zh.common.entity.Feedback">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="problem" jdbcType="VARCHAR" property="problem" />
@@ -23,7 +23,7 @@
     delete from blog_feedback
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.zh.user.entity.Feedback">
+  <insert id="insert" parameterType="com.zh.common.entity.Feedback">
     insert into blog_feedback (id, user_id, problem, 
       advice, is_read, email, 
       create_time)
@@ -31,7 +31,7 @@
       #{advice,jdbcType=VARCHAR}, #{isRead,jdbcType=TINYINT}, #{email,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zh.user.entity.Feedback">
+  <insert id="insertSelective" parameterType="com.zh.common.entity.Feedback">
     insert into blog_feedback
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -80,7 +80,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zh.user.entity.Feedback">
+  <update id="updateByPrimaryKeySelective" parameterType="com.zh.common.entity.Feedback">
     update blog_feedback
     <set>
       <if test="userId != null">
@@ -104,7 +104,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zh.user.entity.Feedback">
+  <update id="updateByPrimaryKey" parameterType="com.zh.common.entity.Feedback">
     update blog_feedback
     set user_id = #{userId,jdbcType=INTEGER},
       problem = #{problem,jdbcType=VARCHAR},

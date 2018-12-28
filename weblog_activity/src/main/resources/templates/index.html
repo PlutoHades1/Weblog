@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>首页</title>
+
+    <script src="http://localhost:8082/js/jquery/jquery-3.2.1.js"></script>
+
+</head>
+<body>
+
+    <!--未登录时-->
+    <div th:if="${login==null}">
+        <h2 align="center">未登录</h2>
+        <a href="login.html" th:href="@{/login.html}">请登录</a>
+    </div>
+
+    <div th:if="${login!=null}">
+        <h2 align="center">已登录</h2>
+        <p th:text="${login.username}"></p>
+
+        <img th:src="${'http://localhost:8888/'+login.head}">
+
+        <!--已登录时-->
+        <a href="information.html">个人信息</a>
+
+        <!--登出-->
+        <button type="button" onclick="uout()">退出</button>
+        <script>
+            //退出,跳转到登录页
+            function uout(){
+                $.ajax({
+                    url:"http://localhost:8087/user/logout",
+                    type:"get",
+                    xhrFields:{withCredentials:true},
+                    success:function(data){
+                        location.href="/login.html";
+                    },
+                    dataType:"json"
+                })
+            }
+        </script>
+    </div>
+
+
+
+</body>
+</html>

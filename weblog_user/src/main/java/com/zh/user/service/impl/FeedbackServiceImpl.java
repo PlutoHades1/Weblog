@@ -4,7 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.zh.common.entity.PageBean;
 import com.zh.user.dao.FeedbackMapper;
-import com.zh.user.entity.Feedback;
+import com.zh.common.entity.Feedback;
 import com.zh.user.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

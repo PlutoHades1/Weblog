@@ -3,10 +3,11 @@ package com.zh.user.controller;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import com.zh.common.entity.RResult;
 import com.zh.common.entity.StatusCode;
-import com.zh.common.util.JwtUtil;
-import com.zh.user.entity.Feedback;
+import com.zh.common.entity.Feedback;
 import com.zh.common.entity.User;
 import com.zh.user.exception.NotDataException;
 import com.zh.user.service.FeedbackService;
@@ -17,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
@@ -29,15 +29,12 @@ import javax.validation.Valid;
 /**
  * 用户Controller
  */
-@Controller
+@RestController
 @RequestMapping("/user")
 @CrossOrigin
 public class UserController {
     //日志对象
     private Logger logger = LoggerFactory.getLogger(UserController.class);
-
-    //普通用户角色为user
-    private final String ROLE = "user";
 
     @Autowired
     private UserService userService;
@@ -55,31 +52,37 @@ public class UserController {
      * 用户登录,成功后跳转首页
      */
     @PostMapping("/login")
-    public String login(HttpServletResponse resp, @RequestParam("username") String username,@RequestParam("password") String password){
+    public RResult login(HttpServletResponse resp, @RequestParam("username") String username,@RequestParam("password") String password){
         User user = userService.login(username,password);
+        logger.info("--用户登录了-- : "+user);
 
-        //生成Token
-        String token = JwtUtil.createJWT(""+user.getId(), user.getUsername(), ROLE);
+        //登录信息放入Redis
+        redisTemp.opsForValue().set("user_"+user.getId(),user,30, TimeUnit.MINUTES);
 
-        Cookie cookie = new Cookie("token","m_"+token);
-        //cookie.setMaxAge(-1);
+        Cookie cookie = new Cookie("uid",user.getId()+"");
+        cookie.setMaxAge(-1);
         cookie.setPath("/");
+        cookie.setDomain("localhost");
         resp.addCookie(cookie);
 
-        return "redirect:/index.html";
+        return RResult.success(user);
     }
 
     /**
      * 用户登出
      */
-    @GetMapping("/logout/{id}")
-    @ResponseBody
-    public RResult logout(@PathVariable("id") Integer id, HttpServletResponse resp){
+    @GetMapping("/logout")
+    public RResult logout(@CookieValue("uid") String id, HttpServletResponse resp){
+        //清除cookie
+        Cookie cookie = new Cookie("uid","");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        cookie.setDomain("localhost");
+        resp.addCookie(cookie);
 
-        //跳转登录页面
-        Map<String,String> map = new HashMap<>(1);
-        map.put("toUrl","/login.html");
-        return RResult.success(map);
+        //清除redis
+        redisTemp.delete("user_"+id);
+        return RResult.success();
     }
 
     /**
@@ -87,7 +90,6 @@ public class UserController {
      * 头像保存到文件服务器
      */
     @PutMapping("/head/{id}")
-    @ResponseBody
     public RResult head(@PathVariable("id") Integer id){
         //TODO 需要头像的信息
 //        userService.head(id,"");
@@ -98,7 +100,6 @@ public class UserController {
      * 用户激活账号
      */
     @GetMapping("/active/{id}")
-    @ResponseBody
     public String active(@PathVariable("id") String id,HttpServletRequest req){
         String[] s = id.split("_");
         if (s.length>1){
@@ -116,7 +117,6 @@ public class UserController {
      *      需要填写注销原因,并申请注销,
      */
     @PostMapping("/freeze/{id}")
-    @ResponseBody
     public RResult freeze(@PathVariable("id") Integer id,@Valid Feedback feedback, Errors errors){
         if (errors.hasErrors())
             throw new NotDataException("提交失败,再试一次吧");
@@ -138,9 +138,7 @@ public class UserController {
      * 用户注册
      */
     @PostMapping("/register")
-    @ResponseBody
     public RResult register(String code,String call,HttpServletRequest req, @Valid User user, Errors errors){
-        //TODO 校验登录验证码(后期使用滑块验证,或微信扫码)
 
         //校验数据
         if (StringUtils.isEmpty(code) || errors.hasErrors())
@@ -175,7 +173,6 @@ public class UserController {
      * 用户更改账号
      */
     @PutMapping("/update/{id}")
-    @ResponseBody
     public RResult update(@PathVariable("id") Integer id, @Valid User user, Errors errors){
         //若验证未通过，返回注册表单页
         if (errors.hasErrors())
@@ -191,7 +188,6 @@ public class UserController {
      * 检查username是否已被占用
      */
     @GetMapping("/checkname")
-    @ResponseBody
     public RResult checkname(@RequestParam("username") String username){
         User user = userService.findByUsername(username);
         if (user!=null)
@@ -204,7 +200,6 @@ public class UserController {
      * 检查手机号/邮箱 是否已被占用
      */
     @GetMapping("/checkcall")
-    @ResponseBody
     public RResult checkcall(@RequestParam("call") String call){
         User user = userService.findByCall(call);
         if (user!=null)
@@ -215,30 +210,11 @@ public class UserController {
 
     /**
      * 根据Id查询User
-     *  当ID为0,表示查询当前登录的user
      */
     @GetMapping("/find/{id}")
-    @ResponseBody
-    public RResult findById(@CookieValue("token")String token,@RequestAttribute(value = "loginInfo",required = false) Map<String,String> login,@PathVariable(value = "id") Integer id){
-
-        System.out.println(token);
-
-        System.out.println(login.get("id")+" ---  "+login.get("username"));
-
-        if (id==0){
-            if(login==null)
-                throw new NotDataException("id为空,无法获取信息");
-            id = Integer.parseInt(login.get("id"));
-        }
-
-        System.out.println(" id ------"+id);
-
+    public RResult findById(@PathVariable(value = "id") Integer id){
         User user = userService.findById(id);
-
-        System.out.println(user);
-
         return RResult.success(user);
-
     }
 
 }
